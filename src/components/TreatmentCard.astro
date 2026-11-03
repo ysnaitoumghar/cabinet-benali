@@ -9,11 +9,11 @@ const { treatment, lang, class: cls = '' } = Astro.props;
 const t = ui[lang];
 ---
 <a href={pageUrl(lang, `soins/${treatment.slug}/`)} class={`card t-card ${cls}`}>
-  <span class="icon-badge"><Icon name={treatment.icon} size={24} /></span>
+  <span class="icon-badge icon-badge-lg"><Icon name={treatment.icon} size={26} /></span>
   <h3 class="font-display h3 mt-4">{tr(treatment.name, lang)}</h3>
-  <p class="muted mt-2 text-[0.9375rem]">{tr(treatment.summary, lang)}</p>
+  <p class="muted mt-2">{tr(treatment.summary, lang)}</p>
   <span class="t-card-foot">
     <span>{t.cta.seeTreatment}</span>
-    <span aria-hidden="true" class="rtl-flip"><Icon name="arrow" /></span>
+    <span aria-hidden="true" class="arrow-chip rtl-flip"><Icon name="arrow" size={18} /></span>
   </span>
 </a>

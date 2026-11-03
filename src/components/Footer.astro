@@ -2,6 +2,7 @@
 import { site } from '../config/site';
 import { ui } from '../i18n/ui';
 import { pageUrl, tr, type Lang } from '../lib/l10n';
+import Icon from './Icon.astro';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -22,5 +23,10 @@ const t = ui[lang];
     </div>
     <p class="muted mt-8 text-[0.9375rem]">{t.footer.demo}</p>
     <p class="muted mt-2 text-[0.9375rem]">{t.footer.photos} : {site.photoCredit}</p>
+    {site.github && (
+      <a class="btn btn-outline-light mt-6 min-h-[44px] px-4 text-[0.9375rem]" href={site.github} target="_blank" rel="noopener">
+        <Icon name="github" size={18} />{t.footer.github}
+      </a>
+    )}
   </div>
 </footer>

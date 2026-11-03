@@ -23,8 +23,8 @@ export const site = {
     en: 'Dental surgeon in Rabat, Agdal district',
     ar: 'طبيبة أسنان بالرباط، حي أكدال',
   } satisfies L10n,
-  whatsapp: '212605776972', // format international, chiffres seuls (numéro de démonstration)
-  phone: '+212 6 05 77 69 72',
+  whatsapp: '212600000000', // format international, chiffres seuls (numéro fictif)
+  phone: '+212 6 00 00 00 00',
   email: 'contact@cabinet-benali.example',
   address: {
     fr: '24 avenue de France, Agdal, Rabat',
@@ -39,13 +39,15 @@ export const site = {
   schedule: [null, weekday, weekday, weekday, weekday, weekday, saturday] as (DayHours | null)[],
   languagesSpoken: ['fr', 'ar', 'en'] as const,
   /** Bandeau « site de démonstration » en haut du site. Mettre false pour le retirer. */
-  demoBanner: true,
+  demoBanner: false,
   demo: {
     author: 'Yassine Ait Oumghar',
-    whatsapp: '212605776972',
+    whatsapp: '212600000000',
   },
   // Source des photos d'exemple (affichée dans le pied de page).
   photoCredit: 'Unsplash',
+  /** Lien GitHub du concepteur, affiché en bas de page. Laisser vide pour le masquer. */
+  github: 'https://github.com/ysnaitoumghar',
   themeColor: '#F4F7F8',
   languages: ['fr', 'en', 'ar'] as const,
   defaultLang: 'fr' as const,

@@ -34,7 +34,7 @@ export const cabinet = {
     { value: '2012', label: { fr: 'doctorat en chirurgie dentaire', en: 'doctorate in dental surgery', ar: 'دكتوراه في جراحة الأسنان' } },
     { value: '3', label: { fr: 'langues : français, arabe, anglais', en: 'languages: French, Arabic, English', ar: 'لغات: العربية والفرنسية والإنجليزية' } },
   ],
-  photos: ['salle-soins', 'plateau'],
+  photos: ['salle-soins', 'instruments'],
 };
 
 export const visit = {
@@ -239,19 +239,19 @@ export const legal = {
   paragraphs: {
     fr: [
       'Ce site est un site de démonstration. Le Cabinet Benali, la Dr Salma Benali, l’adresse, les horaires, les diplômes et les coordonnées affichés sont fictifs. Toute ressemblance avec un cabinet ou un praticien réel serait fortuite.',
-      'Le numéro de téléphone et de WhatsApp affiché est celui du concepteur du site, Yassine Ait Oumghar. Les messages envoyés depuis le module de rendez-vous lui parviennent, et aucun rendez-vous réel n’est pris.',
+      'Les numéros de téléphone et de WhatsApp affichés sont fictifs. Aucun message n’est envoyé automatiquement par le module de rendez-vous, et aucun rendez-vous réel n’est pris.',
       'Les textes de ce site sont donnés à titre d’information générale et ne remplacent pas une consultation. Aucun avis de patient n’est publié. Aucune promesse de résultat n’est faite.',
       'Photos : Unsplash, utilisées selon la licence Unsplash. Les photos sont illustratives.',
     ],
     en: [
       'This is a demonstration website. Cabinet Benali, Dr Salma Benali, the address, hours, qualifications and contact details shown are fictitious. Any resemblance to a real practice or practitioner is coincidental.',
-      'The phone and WhatsApp number shown belongs to the site’s designer, Yassine Ait Oumghar. Messages sent from the appointment module reach them, and no real appointment is made.',
+      'The phone and WhatsApp numbers shown are fictitious. The appointment module sends nothing automatically, and no real appointment is made.',
       'The texts on this site are general information and do not replace a consultation. No patient reviews are published. No promise of results is made.',
       'Photos: Unsplash, used under the Unsplash licence. They are illustrative.',
     ],
     ar: [
       'هذا موقع تجريبي. عيادة بنعلي والدكتورة سلمى بنعلي والعنوان والأوقات والشهادات وبيانات الاتصال المعروضة كلها وهمية. أي تشابه مع عيادة أو طبيب حقيقي هو محض صدفة.',
-      'رقم الهاتف وواتساب المعروض هو رقم مصمم الموقع ياسين أيت أومغار. الرسائل المرسلة من وحدة الموعد تصل إليه، ولا يتم أي موعد حقيقي.',
+      'أرقام الهاتف وواتساب المعروضة وهمية. لا ترسل وحدة الموعد أي رسالة تلقائيا، ولا يتم أي موعد حقيقي.',
       'نصوص هذا الموقع معلومات عامة ولا تغني عن الاستشارة الطبية. لا تُنشر أي آراء للمرضى ولا تُقدَّم أي وعود بالنتائج.',
       'الصور: Unsplash، مستعملة وفق ترخيص Unsplash، وهي للتوضيح فقط.',
     ],

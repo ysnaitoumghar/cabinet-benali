@@ -69,7 +69,7 @@ const fr = {
   viewer: { open: 'Agrandir la photo', close: 'Fermer', prev: 'Photo précédente', next: 'Photo suivante', hint: 'Pincez pour zoomer, glissez vers le bas pour fermer' },
   location: { mapLabel: 'Carte OpenStreetMap', mapActivate: 'Toucher pour déplacer la carte', address: 'Adresse', directions: 'Venir au cabinet', details: 'Bon à savoir' },
   contact: { whatsapp: 'WhatsApp', email: 'E-mail', phone: 'Téléphone', address: 'Adresse', hours: 'Horaires', seeAccess: 'Plan et accès' },
-  footer: { demo: 'Site de démonstration. Cabinet, praticienne et coordonnées fictifs.', photos: 'Photos', legal: 'Mentions légales', home: 'Accueil' },
+  footer: { demo: 'Site de démonstration. Cabinet, praticienne et coordonnées fictifs.', photos: 'Photos', legal: 'Mentions légales', home: 'Accueil', github: 'Mon GitHub' },
   demo: {
     text: 'Site de démonstration réalisé par Yassine Ait Oumghar. Vous voulez le même pour votre cabinet ?',
     cta: 'Contactez-moi sur WhatsApp',
@@ -155,7 +155,7 @@ const en: Dict = {
   viewer: { open: 'Enlarge photo', close: 'Close', prev: 'Previous photo', next: 'Next photo', hint: 'Pinch to zoom, swipe down to close' },
   location: { mapLabel: 'OpenStreetMap map', mapActivate: 'Tap to move the map', address: 'Address', directions: 'Getting to the practice', details: 'Good to know' },
   contact: { whatsapp: 'WhatsApp', email: 'Email', phone: 'Phone', address: 'Address', hours: 'Opening hours', seeAccess: 'Map and access' },
-  footer: { demo: 'Demonstration website. Practice, practitioner and contact details are fictitious.', photos: 'Photos', legal: 'Legal notice', home: 'Home' },
+  footer: { demo: 'Demonstration website. Practice, practitioner and contact details are fictitious.', photos: 'Photos', legal: 'Legal notice', home: 'Home', github: 'My GitHub' },
   demo: {
     text: 'Demo website made by Yassine Ait Oumghar. Want the same for your practice?',
     cta: 'Contact me on WhatsApp',
@@ -239,7 +239,7 @@ const ar: Dict = {
   viewer: { open: 'تكبير الصورة', close: 'إغلاق', prev: 'الصورة السابقة', next: 'الصورة التالية', hint: 'قرّبوا الأصابع للتكبير، واسحبوا للأسفل للإغلاق' },
   location: { mapLabel: 'خريطة OpenStreetMap', mapActivate: 'المسوا لتحريك الخريطة', address: 'العنوان', directions: 'الوصول إلى العيادة', details: 'معلومات مفيدة' },
   contact: { whatsapp: 'واتساب', email: 'البريد الإلكتروني', phone: 'الهاتف', address: 'العنوان', hours: 'أوقات العمل', seeAccess: 'الخريطة والولوج' },
-  footer: { demo: 'موقع تجريبي. العيادة والطبيبة وبيانات الاتصال وهمية.', photos: 'الصور', legal: 'الإشعار القانوني', home: 'الرئيسية' },
+  footer: { demo: 'موقع تجريبي. العيادة والطبيبة وبيانات الاتصال وهمية.', photos: 'الصور', legal: 'الإشعار القانوني', home: 'الرئيسية', github: 'حسابي على GitHub' },
   demo: {
     text: 'موقع تجريبي من تصميم ياسين أيت أومغار. تريدون موقعا مثله لعيادتكم؟',
     cta: 'راسلوني على واتساب',

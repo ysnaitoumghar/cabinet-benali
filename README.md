@@ -6,7 +6,7 @@ Site vitrine d'un cabinet dentaire **fictif** (Dr Salma Benali, chirurgien-denti
 
 **Démo en ligne : <https://ysnaitoumghar.github.io/cabinet-benali/>**
 
-> Le cabinet, la praticienne, l'adresse, les horaires et les diplômes sont inventés. Le numéro de téléphone et de WhatsApp est celui du concepteur : les messages du module de rendez-vous arrivent chez lui.
+> Le cabinet, la praticienne, l'adresse, les horaires et les diplômes sont inventés. Les numéros de téléphone et de WhatsApp sont fictifs (06 00 00 00 00) : à remplacer dans .
 
 ## Fonctionnalités
 
