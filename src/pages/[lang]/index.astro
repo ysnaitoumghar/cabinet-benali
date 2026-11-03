@@ -1,0 +1,220 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Photo from '../../components/Photo.astro';
+import TreatmentCard from '../../components/TreatmentCard.astro';
+import Booking from '../../components/Booking.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../config/site';
+import { treatments } from '../../config/treatments';
+import { photoAlt } from '../../config/photos';
+import { hero, cabinet, visit, commitments, coverage, faq } from '../../config/content';
+import { ui } from '../../i18n/ui';
+import { langs, pageUrl, tr, type Lang } from '../../lib/l10n';
+import { fill, telHref, waLink } from '../../lib/whatsapp';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const todayCfg = JSON.stringify({ days: site.schedule, open: t.strip.today, closed: t.strip.closedToday });
+---
+<Layout lang={lang} title={t.meta.homeTitle} description={t.meta.homeDesc} overlay jsonLd>
+  <!-- 1. Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-media">
+      <div class="parallax" data-parallax="0.03">
+        <Photo name={hero.photo} alt={tr(photoAlt[hero.photo], lang)} eager sizes="100vw" widths={[640, 960, 1440, 1920]} position="50% 55%" imgClass="hero-img" />
+      </div>
+    </div>
+    <div class="hero-shade"></div>
+    <div class="wrap hero-body">
+      <h1 id="hero-title" class="font-display h1">
+        {tr(hero.lines, lang).map((line, i) => <span class="line"><span style={`--i:${i}`}>{line}</span></span>)}
+      </h1>
+      <p class="hero-fade lead hero-sub">{tr(hero.sub, lang)}</p>
+      <div class="hero-fade mt-7 flex flex-col gap-3 sm:flex-row">
+        <a class="btn btn-light" href="#rendez-vous">{t.cta.book}</a>
+        <a class="btn btn-outline-light" href="#soins">{t.cta.seeTreatments}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Bandeau d'infos rapides -->
+  <section class="strip" aria-label={t.strip.label}>
+    <div class="wrap strip-inner">
+      <p class="strip-item"><Icon name="clock" /><span data-today={todayCfg}>{t.strip.fallback}</span></p>
+      <a class="strip-item" href={telHref}><Icon name="phone" /><bdi dir="ltr">{site.phone}</bdi></a>
+      <a class="strip-item" href={telHref}><Icon name="alert" /><strong class="font-semibold">{t.strip.emergency}</strong></a>
+    </div>
+  </section>
+
+  <!-- 3. Le cabinet -->
+  <section class="section" id="cabinet">
+    <div class="wrap grid items-start gap-10 md:grid-cols-2 md:gap-16">
+      <div data-reveal>
+        <h2 class="font-display h2">{tr(cabinet.title, lang)}</h2>
+        <p class="lead mt-4">{tr(cabinet.text, lang)}</p>
+        <dl class="facts mt-8">
+          {cabinet.facts.map((f) => <div><dt>{f.value}</dt><dd>{tr(f.label, lang)}</dd></div>)}
+        </dl>
+      </div>
+      <div class="grid gap-4" data-gallery data-reveal>
+        {cabinet.photos.map((p, i) => (
+          <div class={`media ${i === 0 ? 'aspect-[4/3]' : 'aspect-[16/9]'}`}>
+            <button type="button" data-viewer aria-label={t.viewer.open}>
+              <Photo name={p} alt={tr(photoAlt[p], lang)} full sizes="(min-width:768px) 560px, 100vw" widths={[480, 800, 1200]} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Nos soins -->
+  <section class="section section-flush-top" id="soins">
+    <div class="wrap section-head" data-reveal>
+      <h2 class="font-display h2">{t.sections.treatments.title}</h2>
+      <p class="lead">{t.sections.treatments.sub}</p>
+    </div>
+    <div class="wrap-md">
+      <div class="snap-row snap-md-grid md:grid-cols-3 md:gap-6" data-carousel>
+        {treatments.map((x) => <TreatmentCard treatment={x} lang={lang} class="slide-card" />)}
+      </div>
+      <div class="dots md-hide" data-dots></div>
+    </div>
+  </section>
+
+  <!-- 5. Votre première visite -->
+  <section class="section section-flush-top" id="visite">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <h2 class="font-display h2">{t.sections.visit.title}</h2>
+        <p class="lead">{t.sections.visit.sub}</p>
+      </div>
+      <ol class="steps steps-cols" data-reveal>
+        {visit.steps.map((s, i) => (
+          <li>
+            <span class="step-num" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h3 class="text-[1.0625rem] font-semibold leading-snug">{tr(s.title, lang)}</h3>
+              <p class="muted mt-1 text-[0.9375rem]">{tr(s.text, lang)}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 6. Engagements du cabinet -->
+  <section class="section section-flush-top" id="engagements">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <h2 class="font-display h2">{t.sections.commitments.title}</h2>
+        <p class="lead">{t.sections.commitments.sub}</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal>
+        {commitments.map((c) => (
+          <article class="card card-pad">
+            <span class="icon-badge"><Icon name={c.icon} size={24} /></span>
+            <h3 class="mt-4 text-[1.0625rem] font-semibold leading-snug">{tr(c.title, lang)}</h3>
+            <p class="muted mt-2 text-[0.9375rem]">{tr(c.text, lang)}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Rendez-vous -->
+  <section class="section dark-band" id="rendez-vous">
+    <div class="wrap grid items-start gap-10 md:grid-cols-2 md:gap-16">
+      <div data-reveal>
+        <h2 class="font-display h2">{t.sections.appointment.title}</h2>
+        <p class="muted mt-4 max-w-[46ch] text-[1.0625rem]">{t.sections.appointment.sub}</p>
+        <ul class="check-list mt-7">
+          <li><Icon name="clock" size={20} /><span>{t.hours.lines[0].days} : <bdi dir="ltr">{t.hours.lines[0].time}</bdi><br />{t.hours.lines[1].days} : <bdi dir="ltr">{t.hours.lines[1].time}</bdi></span></li>
+          <li><Icon name="alert" size={20} /><span>{t.strip.emergency} : <a class="link" href={telHref}><bdi dir="ltr">{site.phone}</bdi></a></span></li>
+          <li><Icon name="chat" size={20} /><span>{t.booking.opens}</span></li>
+        </ul>
+      </div>
+      <div data-reveal class="delay-1">
+        <Booking lang={lang} id="booking-panel" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Mutuelles et paiement -->
+  <section class="section" id="paiement">
+    <div class="wrap grid items-start gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
+      <div data-reveal>
+        <h2 class="font-display h2">{t.sections.coverage.title}</h2>
+        <p class="lead mt-4">{tr(coverage.intro, lang)}</p>
+      </div>
+      <ul class="grid gap-3 sm:grid-cols-2" data-reveal>
+        {coverage.items.map((c) => (
+          <li class="card flex items-center gap-4 p-4">
+            <span class="icon-badge"><Icon name={c.icon} size={22} /></span>
+            <span class="font-medium leading-snug">{tr(c.label, lang)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 9. FAQ -->
+  <section class="section section-flush-top" id="faq">
+    <div class="wrap grid items-start gap-8 md:grid-cols-[1fr_1.5fr] md:gap-16">
+      <h2 class="font-display h2" data-reveal>{t.sections.faq.title}</h2>
+      <div data-reveal class="delay-1">
+        {faq.map((f, i) => (
+          <div class="acc-item">
+            <h3>
+              <button type="button" class="acc-btn" data-collapse={`faq-${i}`} aria-expanded="false" aria-controls={`faq-${i}`}>
+                <span>{tr(f.q, lang)}</span>
+                <span class="chev"><Icon name="chevron" /></span>
+              </button>
+            </h3>
+            <div class="collapse" id={`faq-${i}`} data-open="false" inert>
+              <div><p class="muted mb-5 max-w-[60ch]">{tr(f.a, lang)}</p></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Contact -->
+  <section class="section section-flush-top" id="contact">
+    <div class="wrap">
+      <div class="card card-pad" data-reveal>
+        <div class="grid items-start gap-8 md:grid-cols-2 md:gap-16">
+          <div>
+            <h2 class="font-display h2">{t.sections.contact.title}</h2>
+            <p class="lead mt-4">{t.sections.contact.sub}</p>
+            <div class="mt-6 flex max-w-[360px] flex-col gap-3">
+              <a class="btn btn-primary" href={waLink(fill(t.generic.whatsappMsg, { clinic: site.name }))} target="_blank" rel="noopener">
+                <Icon name="chat" />{t.cta.whatsapp}
+              </a>
+              <a class="btn btn-ghost" href={pageUrl(lang, 'acces/')}><Icon name="pin" />{t.contact.seeAccess}</a>
+            </div>
+          </div>
+          <ul class="check-list gap-0">
+            <li class="border-b border-stone py-3.5"><Icon name="phone" size={20} /><span><span class="muted block text-sm">{t.contact.phone}</span><a href={telHref}><bdi dir="ltr">{site.phone}</bdi></a></span></li>
+            <li class="border-b border-stone py-3.5"><Icon name="chat" size={20} /><span><span class="muted block text-sm">{t.contact.whatsapp}</span><a href={waLink(fill(t.generic.whatsappMsg, { clinic: site.name }))} target="_blank" rel="noopener"><bdi dir="ltr">{site.phone}</bdi></a></span></li>
+            <li class="border-b border-stone py-3.5"><Icon name="mail" size={20} /><span class="min-w-0"><span class="muted block text-sm">{t.contact.email}</span><a class="break-words" href={`mailto:${site.email}`}>{site.email}</a></span></li>
+            <li class="border-b border-stone py-3.5"><Icon name="pin" size={20} /><span><span class="muted block text-sm">{t.contact.address}</span>{tr(site.address, lang)}</span></li>
+            <li class="py-3.5">
+              <Icon name="clock" size={20} />
+              <span class="flex-1">
+                <span class="muted block text-sm">{t.contact.hours}</span>
+                <dl>
+                  {t.hours.lines.map((h) => <div class="flex justify-between gap-4"><dt>{h.days}</dt><dd><bdi dir="ltr">{h.time}</bdi></dd></div>)}
+                </dl>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

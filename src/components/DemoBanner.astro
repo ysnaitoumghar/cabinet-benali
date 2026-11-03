@@ -1,0 +1,14 @@
+---
+import { site } from '../config/site';
+import { ui } from '../i18n/ui';
+import { waLink } from '../lib/whatsapp';
+import type { Lang } from '../lib/l10n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang].demo;
+---
+<div class="demo-bar" data-demo-bar>
+  <span>{t.text}</span>
+  <a href={waLink(t.waMsg, site.demo.whatsapp)} target="_blank" rel="noopener">{t.cta}</a>
+</div>

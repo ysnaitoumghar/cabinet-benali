@@ -1,0 +1,22 @@
+---
+import { site } from '../config/site';
+import { href } from '../lib/l10n';
+const target = href(`/${site.defaultLang}/`);
+---
+<!doctype html>
+<html lang={site.defaultLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{site.name}</title>
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <meta name="theme-color" content={site.themeColor} />
+    <style is:global>
+      body { margin: 0; padding: 24px; background: #F4F7F8; font-family: system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <p><a href={target}>{site.name}</a></p>
+  </body>
+</html>

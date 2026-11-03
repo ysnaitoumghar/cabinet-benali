@@ -1,0 +1,99 @@
+---
+import { site } from '../config/site';
+import { treatments, treatmentBySlug } from '../config/treatments';
+import { ui } from '../i18n/ui';
+import { locales, tr, type Lang } from '../lib/l10n';
+import { fill, telHref, waLink } from '../lib/whatsapp';
+import Icon from './Icon.astro';
+
+interface Props { lang: Lang; treatmentSlug?: string; id?: string }
+const { lang, treatmentSlug, id = 'booking-panel' } = Astro.props;
+const t = ui[lang];
+const b = t.booking;
+
+const CONSULT = 'consult';
+const URGENT = 'urgent';
+const selected = treatmentSlug && treatmentBySlug(treatmentSlug) ? treatmentSlug : CONSULT;
+const options = [
+  ...treatments.map((x) => ({ value: x.slug, label: tr(x.name, lang) })),
+  { value: CONSULT, label: b.consult },
+  { value: URGENT, label: b.urgent },
+];
+const selectedLabel = options.find((o) => o.value === selected)?.label ?? b.consult;
+
+// Disponibilité par jour (0 = dimanche), calculée depuis site.schedule : ouvert, et après-midi possible.
+const days = site.schedule.map((h) => ({ open: !!h, afternoon: !!h && h.close > '13:00' }));
+
+// Tout ce dont le script du navigateur a besoin, sérialisé une fois.
+const config = {
+  lang,
+  locale: locales[lang],
+  clinic: site.name,
+  whatsapp: site.whatsapp,
+  urgentValue: URGENT,
+  options: Object.fromEntries(options.map((o) => [o.value, o.label])),
+  days,
+  msg: b.msg,
+};
+const firstMessage = fill(t.generic.treatmentMsg, { clinic: site.name, treatment: selectedLabel });
+// Lien de secours : valide sans JavaScript
+const fallbackHref = waLink(firstMessage);
+---
+<form class="card card-pad" data-booking data-config={JSON.stringify(config)} id={id} novalidate>
+  <h3 class="font-display h3 mb-5">{b.title}</h3>
+
+  <div class="grid gap-4">
+    <label class="field">
+      <span>{b.treatment}</span>
+      <select class="input" name="treatment" data-treatment>
+        {options.map((o) => <option value={o.value} selected={o.value === selected}>{o.label}</option>)}
+      </select>
+    </label>
+
+    <div class="urgent-box" data-urgent hidden>
+      <p class="font-display h3">{b.urgentTitle}</p>
+      <p class="mt-1 text-[0.9375rem]">{b.urgentText}</p>
+      <a class="btn btn-primary btn-lg btn-block mt-3" href={telHref} data-call>
+        <Icon name="phone" />{t.cta.callNow} · <bdi dir="ltr">{site.phone}</bdi>
+      </a>
+    </div>
+
+    <label class="field" data-date-field>
+      <span>{b.date}</span>
+      <input class="input" type="date" name="date" data-date />
+    </label>
+    <p class="notice notice-warn" data-closed role="status" hidden>{b.closedSunday}</p>
+
+    <fieldset class="field" data-slot-field>
+      <legend>{b.slot}</legend>
+      <div class="seg">
+        <label><input type="radio" name={`${id}-slot`} value="morning" data-slot checked /><span>{b.morning}</span></label>
+        <label><input type="radio" name={`${id}-slot`} value="afternoon" data-slot /><span>{b.afternoon}</span></label>
+      </div>
+      <p class="muted small" data-sat hidden>{b.saturdayNote}</p>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend>{b.status}</legend>
+      <div class="seg">
+        <label><input type="radio" name={`${id}-status`} value="new" data-status checked /><span>{b.newPatient}</span></label>
+        <label><input type="radio" name={`${id}-status`} value="existing" data-status /><span>{b.existingPatient}</span></label>
+      </div>
+    </fieldset>
+
+    <label class="field">
+      <span>{b.name}</span>
+      <input class="input" type="text" name="name" maxlength="60" autocomplete="name" data-name />
+    </label>
+  </div>
+
+  <div class="summary-box mt-5" aria-live="polite" data-summary>
+    <p class="legend">{b.summary}</p>
+    <p class="summary-text mt-1" data-preview>{firstMessage}</p>
+  </div>
+
+  <a class="btn btn-primary btn-lg btn-block mt-4" href={fallbackHref} target="_blank" rel="noopener" data-send>
+    <Icon name="chat" />{b.send}
+  </a>
+  <p class="muted small mt-3 text-center">{b.opens}</p>
+</form>

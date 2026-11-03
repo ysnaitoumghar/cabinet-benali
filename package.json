@@ -1,0 +1,28 @@
+{
+  "name": "cabinet-benali",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview --host",
+    "check": "astro check",
+    "images": "node scripts/fetch-images.mjs",
+    "icons": "node scripts/make-icons.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^6.0.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/dm-serif-display": "^5.2.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "astro": "^5.0.0",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.6.0"
+  }
+}

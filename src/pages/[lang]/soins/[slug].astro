@@ -1,0 +1,129 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Photo from '../../../components/Photo.astro';
+import TreatmentCard from '../../../components/TreatmentCard.astro';
+import Booking from '../../../components/Booking.astro';
+import Icon from '../../../components/Icon.astro';
+import { site } from '../../../config/site';
+import { treatments } from '../../../config/treatments';
+import { photoAlt } from '../../../config/photos';
+import { ui } from '../../../i18n/ui';
+import { langs, pageUrl, tr, type Lang } from '../../../lib/l10n';
+import { fill } from '../../../lib/whatsapp';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) =>
+    treatments.map((treatment) => ({
+      params: { lang, slug: treatment.slug },
+      props: { treatment },
+    })),
+  );
+}
+const lang = Astro.params.lang as Lang;
+const { treatment } = Astro.props;
+const others = treatments.filter((x) => x.slug !== treatment.slug);
+const t = ui[lang];
+const name = tr(treatment.name, lang);
+const gridCols = treatment.photos.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3';
+---
+<Layout
+  lang={lang}
+  title={name}
+  description={tr(treatment.summary, lang)}
+  path={`soins/${treatment.slug}/`}
+  waText={fill(t.generic.treatmentMsg, { clinic: site.name, treatment: name })}
+  ogPhoto={treatment.photos[0]}
+>
+  <div class="page-top">
+    <div class="wrap">
+      <a href={`${pageUrl(lang)}#soins`} class="inline-flex min-h-[48px] items-center gap-2 text-[0.9375rem] no-underline">
+        <span class="back-arrow"><Icon name="arrow" size={18} /></span>
+        {t.treatment.back}
+      </a>
+      <div class="mt-2 flex items-center gap-4">
+        <span class="icon-badge"><Icon name={treatment.icon} size={26} /></span>
+        <p class="chip">{t.treatment.quote}</p>
+      </div>
+      <h1 class="font-display h1 mb-6 mt-4">{name}</h1>
+    </div>
+
+    <!-- Galerie : rangée à glisser sur téléphone, colonnes sur grand écran. Toucher une photo ouvre la visionneuse. -->
+    <div class="wrap-md">
+      <div class={`snap-row snap-md-grid md:gap-4 ${gridCols}`} data-carousel data-gallery>
+        {treatment.photos.map((p, i) => (
+          <div class="media slide-photo aspect-[4/3]">
+            <button type="button" data-viewer aria-label={t.viewer.open}>
+              <Photo name={p} alt={tr(photoAlt[p], lang)} full eager={i === 0} sizes="(min-width:768px) 380px, 86vw" widths={[480, 720, 960]} />
+            </button>
+          </div>
+        ))}
+      </div>
+      <div class="dots md-hide" data-dots></div>
+    </div>
+
+    <section class="section-tight wrap grid items-start gap-12 pt-10 md:grid-cols-[1.2fr_1fr] md:gap-16">
+      <div>
+        <p class="lead" data-reveal>{tr(treatment.description, lang)}</p>
+
+        <dl class="mt-8 grid gap-4 sm:grid-cols-2" data-reveal>
+          <div class="card card-pad">
+            <dt class="legend flex items-center gap-2"><Icon name="clock" size={18} />{t.treatment.duration}</dt>
+            <dd class="mt-1 font-medium">{tr(treatment.duration, lang)}</dd>
+          </div>
+          <div class="card card-pad">
+            <dt class="legend flex items-center gap-2"><Icon name="calendar" size={18} />{t.treatment.sessions}</dt>
+            <dd class="mt-1 font-medium">{tr(treatment.sessions, lang)}</dd>
+          </div>
+        </dl>
+
+        <h2 class="font-display h3 mb-3 mt-10" data-reveal>{t.treatment.forWho}</h2>
+        <p data-reveal>{tr(treatment.forWho, lang)}</p>
+
+        <h2 class="font-display h3 mb-4 mt-10" data-reveal>{t.treatment.steps}</h2>
+        <ol class="steps" data-reveal>
+          {tr(treatment.steps, lang).map((s, i) => (
+            <li>
+              <span class="step-num" aria-hidden="true">{i + 1}</span>
+              <p class="pt-2">{s}</p>
+            </li>
+          ))}
+        </ol>
+
+        <h2 class="font-display h3 mb-2 mt-12" data-reveal>{t.treatment.faq}</h2>
+        <div data-reveal>
+          {treatment.faq.map((f, i) => (
+            <div class="acc-item">
+              <h3>
+                <button type="button" class="acc-btn" data-collapse={`tfaq-${i}`} aria-expanded="false" aria-controls={`tfaq-${i}`}>
+                  <span>{tr(f.q, lang)}</span>
+                  <span class="chev"><Icon name="chevron" /></span>
+                </button>
+              </h3>
+              <div class="collapse" id={`tfaq-${i}`} data-open="false" inert>
+                <div><p class="muted mb-5 max-w-[60ch]">{tr(f.a, lang)}</p></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <aside class="md:sticky md:top-[calc(var(--top-h)+24px)]" data-reveal>
+        <div class="card card-pad mb-4">
+          <p class="font-display h3">{t.treatment.quote}</p>
+          <p class="muted mt-2 text-[0.9375rem]">{t.treatment.quoteNote}</p>
+        </div>
+        <Booking lang={lang} treatmentSlug={treatment.slug} id="booking-treatment" />
+      </aside>
+    </section>
+
+    <section class="section pt-6">
+      <div class="wrap section-head"><h2 class="font-display h2">{t.treatment.others}</h2></div>
+      <div class="wrap-md">
+        <div class="snap-row snap-md-grid md:grid-cols-3 md:gap-6" data-carousel>
+          {others.map((x) => <TreatmentCard treatment={x} lang={lang} class="slide-card" />)}
+        </div>
+        <div class="dots md-hide" data-dots></div>
+      </div>
+    </section>
+  </div>
+</Layout>

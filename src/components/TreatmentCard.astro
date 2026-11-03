@@ -1,0 +1,19 @@
+---
+import { ui } from '../i18n/ui';
+import { pageUrl, tr, type Lang } from '../lib/l10n';
+import type { Treatment } from '../config/treatments';
+import Icon from './Icon.astro';
+
+interface Props { treatment: Treatment; lang: Lang; class?: string }
+const { treatment, lang, class: cls = '' } = Astro.props;
+const t = ui[lang];
+---
+<a href={pageUrl(lang, `soins/${treatment.slug}/`)} class={`card t-card ${cls}`}>
+  <span class="icon-badge"><Icon name={treatment.icon} size={24} /></span>
+  <h3 class="font-display h3 mt-4">{tr(treatment.name, lang)}</h3>
+  <p class="muted mt-2 text-[0.9375rem]">{tr(treatment.summary, lang)}</p>
+  <span class="t-card-foot">
+    <span>{t.cta.seeTreatment}</span>
+    <span aria-hidden="true" class="rtl-flip"><Icon name="arrow" /></span>
+  </span>
+</a>

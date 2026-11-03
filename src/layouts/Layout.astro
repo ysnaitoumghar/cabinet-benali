@@ -1,0 +1,119 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { getImage } from 'astro:assets';
+import '@fontsource/dm-serif-display/latin-400.css';
+import '@fontsource/dm-serif-display/latin-ext-400.css';
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+import '../styles/global.css';
+import { site } from '../config/site';
+import { theme } from '../config/theme.mjs';
+import { ui } from '../i18n/ui';
+import { dir, href, langs, ogLocales, pageUrl, tr, type Lang } from '../lib/l10n';
+import { photo } from '../lib/photos';
+import Header from '../components/Header.astro';
+import StickyBar from '../components/StickyBar.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** chemin de la page sous /{lang}/ pour hreflang et le sélecteur de langue, ex. "acces/" */
+  path?: string;
+  /** en-tête transparent au-dessus d'un hero plein écran */
+  overlay?: boolean;
+  /** message WhatsApp pré-rempli pour la barre collante */
+  waText?: string;
+  ogPhoto?: string;
+  /** ajoute le balisage JSON-LD du cabinet (page d'accueil et page d'accès) */
+  jsonLd?: boolean;
+}
+const { lang, title, description, path = '', overlay = false, waText, ogPhoto = 'fauteuil-bleu', jsonLd = false } = Astro.props;
+const t = ui[lang];
+
+const css = Object.entries(theme).map(([k, v]) => `--c-${k}:${v}`).join(';');
+const og = await getImage({ src: photo(ogPhoto), width: 1200, height: 630, format: 'jpeg', quality: 75 });
+const origin = Astro.site ? Astro.site.origin : '';
+const canonical = origin + pageUrl(lang, path);
+const fullTitle = `${title} | ${site.name}`;
+const viewerStrings = JSON.stringify({ close: t.viewer.close, prev: t.viewer.prev, next: t.viewer.next, hint: t.viewer.hint, label: t.viewer.open });
+
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const structured = jsonLd
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Dentist',
+      name: site.name,
+      description: tr(site.tagline, lang),
+      url: canonical,
+      image: origin + og.src,
+      telephone: site.phone,
+      email: site.email,
+      knowsLanguage: [...site.languagesSpoken],
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: `${site.addressParts.street}, ${site.addressParts.district}`,
+        addressLocality: site.addressParts.city,
+        addressRegion: site.addressParts.region,
+        addressCountry: site.addressParts.country,
+      },
+      geo: { '@type': 'GeoCoordinates', latitude: site.map.lat, longitude: site.map.lon },
+      openingHoursSpecification: site.schedule.flatMap((h, i) => (h ? [{ '@type': 'OpeningHoursSpecification', dayOfWeek: dayNames[i], opens: h.open, closes: h.close }] : [])),
+    }
+  : null;
+---
+<!doctype html>
+<html lang={lang} dir={dir(lang)} class="js" style={css} data-demo={site.demoBanner ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={site.themeColor} />
+    <link rel="canonical" href={canonical} />
+    {langs.map((l) => <link rel="alternate" hreflang={l} href={origin + pageUrl(l, path)} />)}
+    <link rel="alternate" hreflang="x-default" href={origin + pageUrl(site.defaultLang, path)} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={ogLocales[lang]} />
+    {langs.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={ogLocales[l]} />)}
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={origin + og.src} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href={href('/icons/icon-192.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={href('/icons/apple-touch-icon.png')} />
+    <link rel="manifest" href={href('/manifest.webmanifest')} />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content={site.name} />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=no" />
+    {structured && <script type="application/ld+json" set:html={JSON.stringify(structured)} />}
+
+    <!-- Si le script principal échoue, tout afficher après 3 s plutôt que laisser des sections vides -->
+    <script is:inline>
+      setTimeout(function () { if (!window.__rv) document.documentElement.classList.add('no-reveal'); }, 3000);
+    </script>
+    <noscript><style>html.js [data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
+    <ClientRouter />
+  </head>
+  <body data-viewer-strings={viewerStrings} data-lang={lang}>
+    <a class="skip" href="#main">{t.nav.skip}</a>
+    <Header lang={lang} path={path} overlay={overlay} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <StickyBar lang={lang} text={waText} />
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>

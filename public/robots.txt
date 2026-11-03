@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ysnaitoumghar.github.io/cabinet-benali/sitemap-index.xml

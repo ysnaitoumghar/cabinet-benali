@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ui } from '../../i18n/ui';
+import { legal } from '../../config/content';
+import { langs, tr, type Lang } from '../../lib/l10n';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+---
+<Layout lang={lang} title={t.meta.legalTitle} description={t.meta.legalDesc} path="mentions-legales/">
+  <div class="page-top section">
+    <div class="wrap prose-narrow">
+      <h1 class="font-display h1 mb-8">{tr(legal.title, lang)}</h1>
+      <div class="legal-list">
+        {tr(legal.paragraphs, lang).map((p) => <p class="text-[1.0625rem]">{p}</p>)}
+      </div>
+    </div>
+  </div>
+</Layout>

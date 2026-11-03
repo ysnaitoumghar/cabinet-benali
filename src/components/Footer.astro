@@ -1,0 +1,26 @@
+---
+import { site } from '../config/site';
+import { ui } from '../i18n/ui';
+import { pageUrl, tr, type Lang } from '../lib/l10n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+<footer class="dark-band page-end">
+  <div class="wrap py-12">
+    <div class="flex flex-col gap-8 md:flex-row md:justify-between">
+      <div>
+        <p class="font-display h3">{site.name}</p>
+        <p class="muted mt-2">{tr(site.tagline, lang)}</p>
+      </div>
+      <nav aria-label={t.footer.legal} class="flex flex-col md:items-end">
+        <a class="link inline-flex min-h-[44px] items-center" href={pageUrl(lang)}>{t.footer.home}</a>
+        <a class="link inline-flex min-h-[44px] items-center" href={pageUrl(lang, 'acces/')}>{t.nav.access}</a>
+        <a class="link inline-flex min-h-[44px] items-center" href={pageUrl(lang, 'mentions-legales/')}>{t.footer.legal}</a>
+      </nav>
+    </div>
+    <p class="muted mt-8 text-[0.9375rem]">{t.footer.demo}</p>
+    <p class="muted mt-2 text-[0.9375rem]">{t.footer.photos} : {site.photoCredit}</p>
+  </div>
+</footer>
